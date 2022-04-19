@@ -1,5 +1,5 @@
 const express = require("express");
-const { User } = require("./types/User");
+const { resolvers } = require("./resolvers");
 const { graphqlHTTP } = require("express-graphql");
 const { buildSchema } = require("graphql");
 
@@ -11,37 +11,41 @@ var schema = buildSchema(`
   type Query {
     getAllUsers: [User!]!
     getUserById(id: Int!): User!
+    getPosts: [Post]!
+    getPostById: Post
   }
   type Mutation {
     addUser(firstName: String!, lastName: String!): User!
+    addPost(title: String!, content: String, userId: Int!): Post!
   }
   type User {
     id: Int!
     firstName: String!
     lastName: String!
     getFullname: String!
+    address: Address!
+  }
+  type Address {
+    city: String!
+    street: String!
+    number: Int!
+  }
+  type Post {
+    id: Int!
+    title: String!
+    content: String
+    postedBy: User!
   }
 `);
 
-// some mock data - as db values
-const users = [];
-users.push(new User("Florian", "Birloi"));
-users.push(new User("Andrew", "Radulescu"));
-
 // The rootValue provides a resolver function for each API endpoint
 var rootValue = {
-  getAllUsers: () => {
-    return users;
-  },
-  getUserById: (args) => {
-    // passing arguments to query
-    return users.find((user) => user.id === args.id);
-  },
-  addUser: ({ firstName, lastName }) => {
-    const newUser = new User(firstName, lastName);
-    users.push(newUser);
-    return newUser;
-  },
+  getAllUsers: resolvers.getAllUsers,
+  getUserById: resolvers.getUserById,
+  addUser: resolvers.addUser,
+  getPosts: resolvers.getPosts,
+  getPostById: resolvers.getPostById,
+  addPost: resolvers.addPost,
 };
 
 const app = express();
