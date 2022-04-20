@@ -5,6 +5,9 @@ const { buildSchema } = require("graphql");
 // Types -> Fields -> each field has a resolver function which returns the data for that field
 // these are object types - which just represent a kind of object you can fetch from your service
 const schema = buildSchema(`
+  interface Entity {
+    id: Int!
+  }
   type Query {
     getAllUsers: [User!]!
     getUserById(id: Int!): User!
@@ -15,7 +18,7 @@ const schema = buildSchema(`
     addUser(firstName: String!, lastName: String!): User!
     addPost(title: String!, content: String, userId: Int!): Post!
   }
-  type User {
+  type User implements Entity {
     id: Int!
     firstName: String!
     lastName: String!
@@ -27,7 +30,7 @@ const schema = buildSchema(`
     street: String!
     number: Int!
   }
-  type Post {
+  type Post implements Entity {
     id: Int!
     title: String!
     content: String

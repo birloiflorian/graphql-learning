@@ -26,8 +26,8 @@ try {
   app.use(
     "/graphql",
     graphqlHTTP({
-      // schema: shemaFirst,
-      schema: typeFirst,
+      schema: shemaFirst,
+      // schema: typeFirst,
       rootValue,
       graphiql: true, // this can be very useful in development mode
     })
