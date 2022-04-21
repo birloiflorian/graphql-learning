@@ -1,9 +1,5 @@
 const { buildSchema } = require("graphql");
 
-// Construct a schema, using GraphQL schema language
-// We define types (two main types -> Query and Mutation)
-// Types -> Fields -> each field has a resolver function which returns the data for that field
-// these are object types - which just represent a kind of object you can fetch from your service
 const schema = buildSchema(`
   interface Entity {
     id: Int!

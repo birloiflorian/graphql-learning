@@ -15,27 +15,23 @@ var rootValue = {
   addPost: resolvers.addPost,
 };
 
-try {
-  const typeFirst = new GraphQLSchema({
-    query: types.queryType,
-    mutation: types.mutationType,
-  });
+const typeFirst = new GraphQLSchema({
+  query: types.queryType,
+  mutation: types.mutationType,
+});
 
-  const app = express();
+const app = express();
 
-  app.use(
-    "/graphql",
-    graphqlHTTP({
-      schema: shemaFirst,
-      // schema: typeFirst,
-      rootValue,
-      graphiql: true, // this can be very useful in development mode
-    })
-  );
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: shemaFirst,
+    // schema: typeFirst,
+    rootValue,
+    graphiql: true, // this can be very useful in development mode
+  })
+);
 
-  app.listen(4000, () => {
-    console.log("listening to port 4000");
-  });
-} catch (error) {
-  console.log("error", error);
-}
+app.listen(4000, () => {
+  console.log("listening to port 4000");
+});
