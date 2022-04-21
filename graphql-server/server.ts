@@ -1,14 +1,26 @@
 import { ApolloServer, gql } from "apollo-server";
 
 // data
-const books = [
+const users = [
   {
-    title: "The Awakening",
-    author: "Kate Chopin",
+    id: 1,
+    firstName: "Kate",
+    lastName: "Chopin",
+    address: {
+      city: "Bucharest",
+      street: "Iuliu Maniu",
+      number: 15,
+    },
   },
   {
-    title: "City of Glass",
-    author: "Paul Auster",
+    id: 2,
+    firstName: "Kate",
+    lastName: "Upton",
+    address: {
+      city: "Bucharest",
+      street: "Iuliu Maniu",
+      number: 15,
+    },
   },
 ];
 
@@ -16,19 +28,34 @@ const books = [
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
+  """
+  This is a multiline description comment
+  """
+  interface Entity {
+    "Describe on field"
+    id: Int!
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type Address {
+    city: String!
+    street: String!
+    number: Int!
+  }
+
+  type User implements Entity {
+    id: Int!
+    firstName: String!
+    lastName: String!
+    getFullName: String!
+    address: Address!
+  }
+
   type Query {
-    books: [Book]
+    getUsers: [User!]!
+  }
+
+  type Mutation {
+    addUser(firstName: String!, lastName: String!): User!
   }
 `;
 
@@ -36,7 +63,28 @@ const typeDefs = gql`
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    books: () => books,
+    getUsers: () => users,
+  },
+  Mutation: {
+    addUser: (firstName: string, lastName: string) => {
+      const newUser = {
+        id: users.length + 1,
+        firstName: "Kate",
+        lastName: "Chopin",
+        address: {
+          city: "Bucharest",
+          street: "Iuliu Maniu",
+          number: 15,
+        },
+      };
+      users.push(newUser);
+      return newUser;
+    },
+  },
+  User: {
+    getFullName: (parent: any) => {
+      return parent.firstName + " " + parent.lastName;
+    },
   },
 };
 

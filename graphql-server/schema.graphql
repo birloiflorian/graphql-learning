@@ -1,0 +1,29 @@
+"""
+This is a multiline description comment
+"""
+interface Entity {
+  "Describe on field"
+  id: Int!
+}
+
+type Address {
+  city: String!
+  street: String!
+  number: Int!
+}
+
+type User implements Entity {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  getFullName: String!
+  address: Address!
+}
+
+type Query {
+  getUsers: [User!]!
+}
+
+type Mutation {
+  addUser(firstName: String!, lastName: String!): User!
+}
